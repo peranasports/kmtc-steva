@@ -67,20 +67,23 @@ function EmployeePage() {
                 // }
 
                 if (empl.role >= 4) {
-                    var teams = empl.teamsManaged.split('-')
-                    for (var nt = 0; nt < teams.length; nt++) {
-                        const q = query(
-                            eRef,
-                            where("depcode", "==", Number.parseInt(teams[nt])),
-                        );
-                        const querySnap = await getDocs(q);
-                        querySnap.forEach((doc) => {
-                            var e = doc.data()
-                            if (e.iccid != empl.iccid) {
-                                return sts.push(doc.data());
-                            }
-                        });
-                    }
+                    if (empl.teamsManaged !== undefined)
+                    {
+                        var teams = empl.teamsManaged.split('-')
+                        for (var nt = 0; nt < teams.length; nt++) {
+                            const q = query(
+                                eRef,
+                                where("depcode", "==", Number.parseInt(teams[nt])),
+                            );
+                            const querySnap = await getDocs(q);
+                            querySnap.forEach((doc) => {
+                                var e = doc.data()
+                                if (e.iccid != empl.iccid) {
+                                    return sts.push(doc.data());
+                                }
+                            });
+                        }
+                        }
 
                     const q2 = query(
                         eRef,

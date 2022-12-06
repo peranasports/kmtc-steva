@@ -27,11 +27,11 @@ function EvalTable({ category, staff, showSelf }) {
                                     <td className="whitespace-nowrap px-3 py-2.5 text-sm text-gray-500">
                                         {
                                             showSelf ?
-                                                <div className="flex justify-between">
+                                                <div className="flex">
                                                     <div className='ml-4 font-bold'>
                                                         {item["super_" + emp.uid]}
                                                     </div>
-                                                    <div className='mr-6 text-secondary'>
+                                                    <div className='ml-4 text-secondary'>
                                                         {item["self_" + emp.uid]}
                                                     </div>
                                                 </div>
