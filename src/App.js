@@ -14,6 +14,7 @@ import GMPage from './pages/GMPage';
 import DepartmentEvaluationPage from './pages/DepartmentEvaluationPage';
 import StaffManagement from './pages/StaffManagement';
 import AllEvaluations from './pages/AllEvaluations';
+import DepartmentEditor from './pages/DepartmentEditor';
 
 // React Toastify
 import { ToastContainer } from "react-toastify";
@@ -31,6 +32,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/gmpage" element={<GMPage />} />
+              <Route path="/departmenteditor" element={<DepartmentEditor />} />
               <Route path="/staffmanagement" element={<StaffManagement />} />
               <Route path="/allevals" element={<AllEvaluations />} />
               <Route path="/departmenteval" element={<DepartmentEvaluationPage />} />

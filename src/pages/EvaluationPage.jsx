@@ -332,6 +332,12 @@ function EvaluationPage() {
         return ass
     }
 
+    const doSubmit = async () => {
+        assessment.submitted = true
+        var ass = await saveAssessment()
+        navigate(`/employee/${supervisor.uid}`)
+    }
+
     const doBack = async () => {
         var ass = await saveAssessment()
         navigate(`/employee/${supervisor.uid}`)
@@ -375,9 +381,9 @@ function EvaluationPage() {
                 <div className="flex justify-between">
                     <div className="mt-2 justify-start">
                         <button className="w-28 btn btn-sm bg-blue-800 text-white" onClick={() => doBack()}>BACK</button>
-                        <button className="w-28 btn btn-sm bg-blue-800 text-white">SUBMIT</button>
+                        <button className="w-28 btn btn-sm bg-blue-800 text-white" onClick={() => doSubmit()}>SUBMIT</button>
                         <button className='w-28 btn btn-sm bg-blue-800 text-white' onClick={doComments}>COMMENTS</button>
-                        <button className="ml-4 btn btn-sm bg-slate-800 text-slate-400" onClick={() => doRandom()}>RANDOM FILL</button>
+                        <button className="ml-4 btn btn-sm bg-slate-800 text-slate-400 hidden" onClick={() => doRandom()}>RANDOM FILL</button>
                     </div>
                     <div className="flex justify-end">
                         <p className='mt-2 text-lg'>

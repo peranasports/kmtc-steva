@@ -1,0 +1,166 @@
+import { useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { CheckCircleIcon, ChevronRightIcon, EnvelopeIcon } from '@heroicons/react/20/solid'
+import Spinner from "./../components/Spinner";
+import head from '../assets/avatars/head.png'
+// Firebase Authentication
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+// Firebase Database
+import { db } from "../firebase.config";
+
+// Firebase Firestore
+import { doc, setDoc, serverTimestamp, collection, addDoc } from "firebase/firestore";
+
+// Firebase Storage
+import {
+    uploadBytesResumable,
+    getDownloadURL,
+    getStorage,
+    ref,
+} from "firebase/storage";
+
+function DepartmentEditor() {
+    const location = useLocation()
+    const department = location.state;
+    const [currentEmployee, setCurrentEmployee] = useState(null)
+    const [loading, setLoading] = useState(false);
+    const inputFile = useRef(null)
+
+    const storeImage = async (image) => {
+        return new Promise((resolve, reject) => {
+            const storage = getStorage();
+
+            const fileName = `${currentEmployee.iccid}-${image.name}`;
+
+            const storageRef = ref(storage, `images/${fileName}`);
+
+            const uploadTask = uploadBytesResumable(storageRef, image);
+
+            uploadTask.on(
+                "state_changed",
+                (snapshot) => {
+                    const progress =
+                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+                    console.log("Upload is " + progress + "% done");
+
+                    switch (snapshot.state) {
+                        case "paused":
+                            console.log("Upload is paused");
+                            break;
+                        case "running":
+                            console.log("Upload is running");
+                            break;
+                        default:
+                            break;
+                    }
+                },
+                (error) => {
+                    reject(error);
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        resolve(downloadURL);
+                    });
+                }
+            );
+        });
+    };
+
+
+    const getRandomAvatar = (emp) => {
+        var names = emp.name.split(' ')
+        if (names[0] === 'Mr.') {
+            var n = Math.ceil(Math.random(9)).toString()
+            return '../assets/avatars/man_1.png'
+            // return '../assets/avatars/man_' + n + '.png'
+        }
+        else {
+            var n = Math.ceil(Math.random(9)).toString()
+            return '../assets/avatars/man_1.png'
+            // return '../assets/avatars/girl_' + n + '.png'
+        }
+    }
+
+    const onMutate = async (e) => {
+        // File
+        if (e.target.files) {
+            setLoading(true);
+            currentEmployee.photoUrl = await storeImage(e.target.files[0])
+            console.log(currentEmployee.photoUrl)
+            if (currentEmployee.photoUrl) {
+                await setDoc(doc(db, "employees", currentEmployee.docId), currentEmployee);
+            }
+            setLoading(false);
+        }
+    }
+
+    const getPhoto = (emp) => {
+        setCurrentEmployee(emp)
+        inputFile.current.click();
+    }
+
+    if (department === undefined) {
+        return <></>
+    }
+
+    if (loading) {
+        return <Spinner />;
+    }
+
+    return (
+        <>
+            <div>
+                <p className="my-6 text-2xl text-white">{department.name.toUpperCase()}</p>
+            </div>
+            <div className="overflow-hidden bg-white shadow sm:rounded-md">
+                <ul role="list" className="divide-y divide-gray-200">
+                    {department.employees.map((emp) => (
+                        <li key={emp.emailAddress}>
+                            <a href={emp.href} className="block hover:bg-gray-50">
+                                <div className="flex items-center px-4 py-4 sm:px-6">
+                                    <div className="flex min-w-0 flex-1 items-center">
+                                        <div className="flex-shrink-0">
+                                            <div className="avatar">
+                                                <div className="w-12 rounded-xl">
+                                                    <input type='file' id='file' ref={inputFile} onChange={onMutate} style={{ display: 'none' }} />
+                                                    <img className="cursor-pointer" src={emp.photoUrl ? emp.photoUrl : head} alt="" onClick={() => getPhoto(emp)} />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
+                                            <div>
+                                                <p className="truncate text-sm font-medium text-indigo-600">{emp.name}</p>
+                                                <p className="mt-2 flex items-center text-sm text-gray-500">
+                                                    <EnvelopeIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
+                                                    <span className="truncate">{emp.emailAddress}</span>
+                                                </p>
+                                            </div>
+                                            <div className="hidden md:block">
+                                                <div>
+                                                    <p className="text-sm text-gray-900">
+                                                        {emp.position}
+                                                    </p>
+                                                    <p className="mt-2 flex items-center text-sm text-gray-500">
+                                                        <CheckCircleIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400" aria-hidden="true" />
+                                                        {/* {application.stage} */}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <ChevronRightIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </>
+    )
+}
+
+export default DepartmentEditor
