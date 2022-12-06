@@ -16,15 +16,15 @@ function EvalSummaryTable({summary, staff}) {
         var diff = summary[3]["leadertotal_" + emp.uid] - summary[4]["selftotal_" + emp.uid]
         if (diff < -5)
         {
-            return "whitespace-nowrap px-3 py-2.5 bg-red-100 text-sm text-gray-500"
+            return "whitespace-nowrap text-center py-2.5 bg-red-100 text-sm text-gray-500"
         }
         else if (diff > 8)
         {
-            return "whitespace-nowrap px-3 py-2.5 bg-green-100 text-sm text-gray-500"
+            return "whitespace-nowrap text-center py-2.5 bg-green-100 text-sm text-gray-500"
         }
         else
         {
-            return "whitespace-nowrap px-3 py-2.5 text-sm text-gray-500"
+            return "whitespace-nowrap text-center py-2.5 text-sm text-gray-500"
         }
     }
 
@@ -46,7 +46,7 @@ function EvalSummaryTable({summary, staff}) {
                     </thead>
                     <tbody className="bg-white">
                             <tr>
-                                <td className="py-2.5 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                <td className="text-end py-2.5 pr-6 text-sm font-medium text-gray-900 sm:pl-6">
                                     {summary[0].name}
                                 </td>
                                 {staff.map((emp) => (
@@ -54,7 +54,7 @@ function EvalSummaryTable({summary, staff}) {
                                 ))}
                             </tr>
                             <tr>
-                                <td className="py-2.5 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                <td className="text-end py-2.5 pr-6 text-sm font-medium text-gray-900 sm:pl-6">
                                     {summary[1].name}
                                 </td>
                                 {staff.map((emp) => (
@@ -62,11 +62,11 @@ function EvalSummaryTable({summary, staff}) {
                                 ))}
                             </tr>
                             <tr>
-                                <td className="py-2.5 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                <td className="text-end py-2.5 pr-6 text-sm font-medium text-gray-900 sm:pl-6">
                                     {summary[2].name}
                                 </td>
                                 {staff.map((emp) => (
-                                    <td className="whitespace-nowrap px-3 py-2.5 text-sm text-gray-500">{summary[2]["self_" + emp.uid]}</td>
+                                    <td className="whitespace-nowrap text-center py-2.5 text-sm text-gray-500">{summary[2]["self_" + emp.uid]}</td>
                                 ))}
                             </tr>
                     </tbody>

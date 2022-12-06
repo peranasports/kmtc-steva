@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import { useState } from 'react'
 
 function EvalTable({ category, staff, showSelf }) {
     return (
@@ -27,17 +27,19 @@ function EvalTable({ category, staff, showSelf }) {
                                     <td className="whitespace-nowrap px-3 py-2.5 text-sm text-gray-500">
                                         {
                                             showSelf ?
-                                                <div className="flex">
-                                                    <div className='ml-4 font-bold'>
+                                                <div className="flex justify-center">
+                                                    <div className='font-bold'>
                                                         {item["super_" + emp.uid]}
                                                     </div>
                                                     <div className='ml-4 text-secondary'>
                                                         {item["self_" + emp.uid]}
                                                     </div>
                                                 </div>
-                                            :
-                                                <div className='ml-4 font-bold'>
-                                                    {item["super_" + emp.uid]}
+                                                :
+                                                <div className="flex justify-center">
+                                                    <div className='font-bold'>
+                                                        {item["super_" + emp.uid]}
+                                                    </div>
                                                 </div>
                                         }
                                     </td>

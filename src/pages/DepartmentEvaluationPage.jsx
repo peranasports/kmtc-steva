@@ -96,7 +96,7 @@ function DepartmentEvaluationPage() {
                 setSelfEvals(selfs)
 
                 var scats = []
-                var sums = [{ name: 'Grade' }, { name: 'Score' }, { name: 'Self' }, {name: 'Leader Total'}, {name: 'Self Total'}]
+                var sums = [{ name: 'Grade' }, { name: 'Team Leader Score' }, { name: 'Self Score' }, {name: 'Leader Total'}, {name: 'Self Total'}]
                 for (var ne = 0; ne < sts.length; ne++) {
                     var emp = sts[ne]
                     if (emp.uid === undefined)

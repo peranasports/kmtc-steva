@@ -210,7 +210,7 @@ function GMPage() {
         <>
             <div className="flex justify-between">
                 <div className="mt-2">
-                    <button className="btn btn-sm bg-blue-800 text-white" onClick={() => doStaff()}>STAFF</button>
+                    <button className="btn btn-sm bg-blue-800 text-white hidden" onClick={() => doStaff()}>STAFF</button>
                     <button className="btn btn-sm bg-blue-800 text-white" onClick={() => doAllEvaluations()}>ALL EVALUATIONS</button>
                     <button className="btn btn-sm bg-blue-800 text-white" onClick={() => doForEvaluation()}>FOR EVALUATION</button>
                 </div>
