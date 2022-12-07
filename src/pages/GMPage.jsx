@@ -94,7 +94,7 @@ function GMPage() {
                         if (emp.port === dep.port && emp.department === dep.code) {
                             dep.employees.push(emp)
                             if (emp.role >= 4) {
-                                dep.manager = emp
+                                dep.teamleader = emp
                             }
                         }
                     }
@@ -108,6 +108,33 @@ function GMPage() {
 
                 for (var nc = 0; nc < deps.length; nc++) {
                     var dep = deps[nc]
+                    for (var ne=0; ne<empls.length; ne++)
+                    {
+                        var emp = empls[ne]
+                        if (emp.teamsManaged !== undefined)
+                        {
+                            var teams = emp.teamsManaged.split('-')
+                            for (var nt=0; nt<teams.length; nt++)
+                            {
+                                if (Number.parseInt(teams[nt]) === dep.id)
+                                {
+                                    if (dep.teamleader !== undefined)
+                                    {
+                                        if (dep.teamleader.uid !== emp.uid)
+                                        {
+                                            dep.manager = emp
+                                            break
+                                        }
+                                    }
+                                    else
+                                    {
+                                        dep.manager = emp
+                                        break
+                                    }
+                                }
+                            }
+                        }
+                    }
                     if (dep.port === 'SGN') {
                         dep.region = 0
                         regs[0].departments.push(dep)
@@ -278,7 +305,7 @@ function GMPage() {
                                                         <a href={department.href} className="font-medium text-gray-900 hover:text-gray-600">
                                                             {department.name}
                                                         </a>
-                                                        <p className="text-gray-500 font-bold">{department.manager ? department.manager.name : ''}</p>
+                                                        <p className="text-gray-500 font-bold">{department.teamleader ? department.teamleader.name : ''}</p>
                                                         <p className="text-gray-500">{department.employees.length.toString()} Members</p>
                                                     </div>
                                                     <div className="flex ml-3 mb-2">

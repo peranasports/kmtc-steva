@@ -33,6 +33,7 @@ function DepartmentEvaluationPage() {
     const [categories, setCategories] = useState([])
     const [comments, setComments] = useState([])
     const [showSelf, setShowSelf] = useState(0)
+    const [currentSupervisor, setCurrentSupervisor] = useState(department.teamleader !== undefined ? department.teamleader : department.manager)
 
     useEffect(() => {
         const fetchStaff = async () => {
@@ -60,8 +61,7 @@ function DepartmentEvaluationPage() {
                 const aRef = collection(db, "assessments");
                 for (var ns = 0; ns < sts.length; ns++) {
                     var emp = sts[ns]
-                    if (emp.uid === undefined)
-                    {
+                    if (emp.uid === undefined) {
                         continue
                     }
                     const q1 = query(
@@ -81,7 +81,7 @@ function DepartmentEvaluationPage() {
                     const q2 = query(
                         aRef,
                         where("employeeUid", "==", emp.uid),
-                        where("supervisorUid", "!=", emp.uid),
+                        where("supervisorUid", "==", currentSupervisor.uid),
                     );
                     const querySnap2 = await getDocs(q2);
                     const ass2es = [];
@@ -89,18 +89,21 @@ function DepartmentEvaluationPage() {
                         return ass2es.push(doc.data());
                     });
                     if (ass2es.length > 0) {
-                        sups.push(ass2es[0])
+                        var ass = ass2es[0]
+                        if (ass.employeeUid !== ass.supervisorUid)
+                        {
+                            sups.push(ass2es[0])
+                        }
                     }
                 }
                 setSuperEvals(sups)
                 setSelfEvals(selfs)
 
                 var scats = []
-                var sums = [{ name: 'Grade' }, { name: 'Team Leader Score' }, { name: 'Self Score' }, {name: 'Leader Total'}, {name: 'Self Total'}]
+                var sums = [{ name: 'Grade' }, { name: 'Team Leader Score' }, { name: 'Self Score' }, { name: 'Leader Total' }, { name: 'Self Total' }]
                 for (var ne = 0; ne < sts.length; ne++) {
                     var emp = sts[ne]
-                    if (emp.uid === undefined)
-                    {
+                    if (emp.uid === undefined) {
                         continue
                     }
                     //get self evals
@@ -210,20 +213,26 @@ function DepartmentEvaluationPage() {
 
                 setLoading(false);
             } catch (error) {
-                toast.error("Could not fetch staff list\n" + error.message);
+                if (error.message.startsWith('Function where'))
+                {
+                    toast.error("Could not fetch staff list. Team Leader has not signed up");
+                }
+                else
+                {
+                    toast.error("Could not fetch staff list\n" + error.message);
+                }
             }
         }
 
         fetchStaff()
         // forceUpdate(n => !n)
-    }, []);
+    }, [currentSupervisor]);
 
     const doBack = () => {
         navigate('/gmpage')
     }
 
-    const toggleShowSelf = () =>
-    {
+    const toggleShowSelf = () => {
         var ss = showSelf
         setShowSelf(!ss)
         forceUpdate(n => !n)
@@ -254,8 +263,21 @@ function DepartmentEvaluationPage() {
                             </label>
                         </div>
                     </div>
-                    <div className="mt-2 text-center text-2xl font-bold">
-                        {department.name.toUpperCase()}
+                    <div className='flex justify-between'>
+                        <div className="mt-2 text-2xl font-bold">
+                            {department.name.toUpperCase()}
+                        </div>
+                        {
+                            department.teamleader !== undefined && department.manager !== undefined ?
+                                <div className="mt-2 text-2xl font-bold">
+                                    <div className="btn-group">
+                                        <button className={currentSupervisor === department.teamleader ? "btn btn-active" : "btn"} onClick={() => setCurrentSupervisor(department.teamleader)}>{department.teamleader.name.toUpperCase()}</button>
+                                        <button className={currentSupervisor === department.manager ? "btn btn-active" : "btn"} onClick={() => setCurrentSupervisor(department.manager)}>{department.manager.name.toUpperCase()}</button>
+                                    </div>
+                                </div>
+                                :
+                                <></>
+                        }
                     </div>
                     <div className=''>
                         {categories.map((category) => (
