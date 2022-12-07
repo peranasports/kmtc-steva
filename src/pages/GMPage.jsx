@@ -197,6 +197,40 @@ function GMPage() {
         navigate('/departmenteditor', { state: department })
     }
 
+    const doFix = async () =>
+    {
+        const aRef = collection(db, "assessments");
+        const q1 = query(
+                aRef,
+        );
+        const querySnap1 = await getDocs(q1);
+        const asses = [];
+        querySnap1.forEach((doc) => {
+            return asses.push(doc.data());
+        });
+        if (asses.length > 0) {
+            for (var na=0; na<asses.length; na++)
+            {
+                var ass = asses[na]
+                var s = ''
+                var items = ass.evalitems.split('|~|')
+                for (var ni=0; ni<items.length; ni++)
+                {
+                    var item = JSON.parse(items[ni])
+                    if (item.order >= 6 && item.catId > 1)
+                    {
+                        item.order = item.order + 1
+                    }
+                    if (s.length > 0) s += "|~|"
+                    s += JSON.stringify(item)
+                }
+                ass.evalitems = s
+                // console.log(s)
+                await setDoc(doc(db, "assessments", ass.uid), ass);
+            }
+        }
+    }
+
     if (loading) {
         return <Spinner />;
     }
@@ -210,7 +244,7 @@ function GMPage() {
         <>
             <div className="flex justify-between">
                 <div className="mt-2">
-                    <button className="btn btn-sm bg-blue-800 text-white hidden" onClick={() => doStaff()}>STAFF</button>
+                    <button className="btn btn-sm bg-blue-800 text-white hidden" onClick={() => doFix()}>FIX</button>
                     <button className="btn btn-sm bg-blue-800 text-white" onClick={() => doAllEvaluations()}>ALL EVALUATIONS</button>
                     <button className="btn btn-sm bg-blue-800 text-white" onClick={() => doForEvaluation()}>FOR EVALUATION</button>
                 </div>

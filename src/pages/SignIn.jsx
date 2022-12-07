@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { collection, query, where, getDocs } from "firebase/firestore"
+import { setDoc, doc, collection, query, where, getDocs } from "firebase/firestore"
 import { db } from "../firebase.config";
 
 // Icons
@@ -35,23 +35,37 @@ function SignIn() {
     try {
       const eRef = collection(db, "employees");
       const q = query(
-          eRef,
-          where("uid", "==", user.uid)
+        eRef,
+        where("uid", "==", user.uid)
       );
       const querySnap = await getDocs(q);
       const empls = [];
       querySnap.forEach((doc) => {
-          return empls.push({
-              id: doc.id,
-              data: doc.data(),
-          });
+        return empls.push(doc.data());
       });
-      if (empls.length > 0)
-      {
-        var empl = empls[0].data
+      if (empls.length > 0) {
+        var empl = empls[0]
       }
-      } catch (error) {
-        console.log(error)
+      else {
+        const q2 = query(
+          eRef,
+          where("emailAddress", "==", user.email)
+        );
+        const querySnap2 = await getDocs(q2);
+        querySnap2.forEach((doc) => {
+          return empls.push({
+            id: doc.id,
+            data: doc.data(),
+          });
+        });
+        if (empls.length > 0) {
+          var empl = empls[0].data
+          empl.uid = user.uid
+          await setDoc(doc(db, "employees", empls[0].id), empl);
+        }
+      }
+    } catch (error) {
+      console.log(error)
     }
     return empl
   };
@@ -70,15 +84,13 @@ function SignIn() {
 
       if (userCredential.user) {
 
-  
+
         var employee = await fetchEmployee(userCredential.user)
         console.log(employee.role + " " + employee.name)
-        if (employee.role === 10)
-        {
+        if (employee.role === 10) {
           navigate('/gmpage')
         }
-        else
-        {
+        else {
           navigate(`/employee/${userCredential.user.uid}`)
         }
       }
