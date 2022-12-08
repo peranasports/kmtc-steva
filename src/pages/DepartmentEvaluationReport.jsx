@@ -20,7 +20,7 @@ import {
     serverTimestamp,
 } from "firebase/firestore";
 
-function DepartmentEvaluationPage() {
+function DepartmentEvaluationReport() {
     const navigate = useNavigate()
     const location = useLocation();
     const { department } = location.state;
@@ -38,24 +38,27 @@ function DepartmentEvaluationPage() {
     useEffect(() => {
         const fetchStaff = async () => {
             try {
-                const eRef = collection(db, "employees");
-                const q = query(
-                    eRef,
-                    where("depcode", "==", department.id),
-                    orderBy("role", "desc")
-                );
-                const querySnap = await getDocs(q);
-                const sts = [];
-                var teamleader = null
-                querySnap.forEach((doc) => {
-                    var emp = doc.data()
-                    if (emp.role === 4) {
-                        teamleader = emp
-                    }
-                    return sts.push(emp);
-                });
-                setStaff(sts)
+                // const eRef = collection(db, "employees");
+                // const q = query(
+                //     eRef,
+                //     where("depcode", "==", department.id),
+                //     orderBy("role", "desc")
+                // );
+                // const querySnap = await getDocs(q);
+                // const sts = [];
+                // var teamleader = null
+                // querySnap.forEach((doc) => {
+                //     var emp = doc.data()
+                //     if (emp.role === 4) {
+                //         teamleader = emp
+                //     }
+                //     return sts.push(emp);
+                // });
+                // setStaff(sts)
 
+                var sts = department.employees
+                setStaff(sts)
+                
                 var selfs = []
                 var sups = []
                 const aRef = collection(db, "assessments");
@@ -309,4 +312,4 @@ function DepartmentEvaluationPage() {
     )
 }
 
-export default DepartmentEvaluationPage
+export default DepartmentEvaluationReport

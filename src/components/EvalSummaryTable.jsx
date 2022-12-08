@@ -11,8 +11,25 @@ function EvalSummaryTable({summary, staff}) {
         return txt
     }
 
+    const getItem = (emp, i) =>
+    {
+        if (emp.supervisor === undefined)
+        {
+            return "self_" + emp.uid
+        }
+        else
+        {
+            return "self_"  + i.toString() + "_" + emp.uid
+        }
+    }
+
     const checkDiff = (emp) =>
     {
+        if (emp.supervisor !== undefined)
+        {
+            return "whitespace-nowrap text-center py-2.5 text-sm text-gray-500"
+        }
+
         var diff = summary[3]["leadertotal_" + emp.uid] - summary[4]["selftotal_" + emp.uid]
         if (diff < -5)
         {
@@ -39,7 +56,8 @@ function EvalSummaryTable({summary, staff}) {
                             </th>
                             {staff.map((emp, i) => (
                                 <th scope="col" className="px-3 py-2 w-10 text-left text-sm font-semibold text-gray-900">
-                                    {emp.iccid}
+                                    {/* {emp.iccid} */}
+                                    {emp.supervisor !== undefined ? "BY " + emp.supervisor.iccid : emp.iccid}
                                 </th>
                             ))}
                         </tr>
@@ -49,24 +67,24 @@ function EvalSummaryTable({summary, staff}) {
                                 <td className="text-end py-2.5 pr-6 text-sm font-medium text-gray-900 sm:pl-6">
                                     {summary[0].name}
                                 </td>
-                                {staff.map((emp) => (
-                                    <td className={gradeTextClass(summary[0]["self_" + emp.uid])}>{summary[0]["self_" + emp.uid]}</td>
+                                {staff.map((emp, i) => (
+                                    <td className={gradeTextClass(summary[0][getItem(emp, i)])}>{summary[0][getItem(emp, i)]}</td>
                                 ))}
                             </tr>
                             <tr>
                                 <td className="text-end py-2.5 pr-6 text-sm font-medium text-gray-900 sm:pl-6">
                                     {summary[1].name}
                                 </td>
-                                {staff.map((emp) => (
-                                    <td className={checkDiff(emp)}>{summary[1]["self_" + emp.uid]}</td>
+                                {staff.map((emp, i) => (
+                                    <td className={checkDiff(emp)}>{summary[1][getItem(emp, i)]}</td>
                                 ))}
                             </tr>
                             <tr>
                                 <td className="text-end py-2.5 pr-6 text-sm font-medium text-gray-900 sm:pl-6">
                                     {summary[2].name}
                                 </td>
-                                {staff.map((emp) => (
-                                    <td className="whitespace-nowrap text-center py-2.5 text-sm text-gray-500">{summary[2]["self_" + emp.uid]}</td>
+                                {staff.map((emp, i) => (
+                                    <td className="whitespace-nowrap text-center py-2.5 text-sm text-gray-500">{summary[2][getItem(emp, i)]}</td>
                                 ))}
                             </tr>
                     </tbody>

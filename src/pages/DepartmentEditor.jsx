@@ -1,8 +1,10 @@
 import { useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { CheckCircleIcon, ChevronRightIcon, EnvelopeIcon } from '@heroicons/react/20/solid'
 import Spinner from "./../components/Spinner";
 import head from '../assets/avatars/head.png'
+import StaffEvaluationReport
+ from "./StaffEvaluationReport";
 // Firebase Authentication
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
@@ -25,6 +27,7 @@ function DepartmentEditor() {
     const department = location.state;
     const [currentEmployee, setCurrentEmployee] = useState(null)
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate()
     const inputFile = useRef(null)
 
     const storeImage = async (image) => {
@@ -101,6 +104,11 @@ function DepartmentEditor() {
         inputFile.current.click();
     }
 
+    const doStaffEval = (emp) =>
+    {
+        navigate('/staffeval', { state: emp })
+    }
+
     if (department === undefined) {
         return <></>
     }
@@ -143,7 +151,7 @@ function DepartmentEditor() {
                                                         {emp.position}
                                                     </p>
                                                     <p className="mt-2 flex items-center text-sm text-gray-500">
-                                                        <CheckCircleIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400" aria-hidden="true" />
+                                                        <CheckCircleIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400" aria-hidden="true" onClick={() => doStaffEval(emp)}/>
                                                         {/* {application.stage} */}
                                                     </p>
                                                 </div>

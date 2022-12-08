@@ -11,7 +11,8 @@ import EvaluationPage from './pages/EvaluationPage'
 import StaffComments from './pages/StaffComments';
 import EmployeePage from './pages/EmployeePage';
 import GMPage from './pages/GMPage';
-import DepartmentEvaluationPage from './pages/DepartmentEvaluationPage';
+import DepartmentEvaluationReport from './pages/DepartmentEvaluationReport';
+import StaffEvaluationReport from './pages/StaffEvaluationReport';
 import StaffManagement from './pages/StaffManagement';
 import AllEvaluations from './pages/AllEvaluations';
 import DepartmentEditor from './pages/DepartmentEditor';
@@ -35,7 +36,8 @@ function App() {
               <Route path="/departmenteditor" element={<DepartmentEditor />} />
               <Route path="/staffmanagement" element={<StaffManagement />} />
               <Route path="/allevals" element={<AllEvaluations />} />
-              <Route path="/departmenteval" element={<DepartmentEvaluationPage />} />
+              <Route path="/departmenteval" element={<DepartmentEvaluationReport />} />
+              <Route path="/staffeval" element={<StaffEvaluationReport />} />
               <Route path="/employee/:userUid" element={<PrivateRoute />}>
                 <Route path='/employee/:userUid' element={<EmployeePage />} />
               </Route>

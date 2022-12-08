@@ -12,7 +12,7 @@ function EvalTable({ category, staff, showSelf }) {
                             </th>
                             {staff.map((emp, i) => (
                                 <th scope="col" className="px-3 py-2 w-10 text-left text-sm font-semibold text-gray-900">
-                                    {emp.iccid}
+                                    {emp.supervisor !== undefined ? "BY " + emp.supervisor.iccid : emp.iccid}
                                 </th>
                             ))}
                         </tr>
@@ -38,7 +38,7 @@ function EvalTable({ category, staff, showSelf }) {
                                                 :
                                                 <div className="flex justify-center">
                                                     <div className='font-bold'>
-                                                        {item["super_" + emp.uid]}
+                                                        {emp.supervisor !== undefined ? item["self_" + i.toString() + "_" + emp.uid] : item["super_" + emp.uid]}
                                                     </div>
                                                 </div>
                                         }

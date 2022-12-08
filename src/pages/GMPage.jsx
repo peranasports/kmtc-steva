@@ -100,14 +100,53 @@ function GMPage() {
                     }
                     return deps.push(dep);
                 });
-                if (deps.length !== 0) {
-                    setDepartments(deps)
+
+                var toberemoved = []
+                for (var nd=0; nd<deps.length; nd++)
+                {
+                    var dep = deps[nd]
+                    if (dep.childDepartment !== undefined)
+                    {
+                        var children = dep.childDepartment.split('-')
+                        for (var nc=0; nc<children.length; nc++)
+                        {
+                            for (var xnd=0; xnd<deps.length; xnd++)
+                            {
+                                var xdep = deps[xnd]
+                                if (xdep.id === Number.parseInt(children[nc]))
+                                {
+                                    for (var ne=0; ne<xdep.employees.length; ne++)
+                                    {
+                                        dep.employees.push(xdep.employees[ne])
+                                    }
+                                    toberemoved.push(xdep)
+                                    break
+                                }
+                            }
+                        }
+                    }
+                }
+
+                var xdeps = []
+                for (var nd=0; nd<deps.length; nd++)
+                {
+                    var dep = deps[nd]
+                    var idx = toberemoved.findIndex(obj => obj.id === dep.id);
+                    if (idx === -1)
+                    {
+                        xdeps.push(dep)
+                    }
+                }
+
+
+                if (xdeps.length !== 0) {
+                    setDepartments(xdeps)
                 }
 
                 const regs = [{ name: 'South', departments: [] }, { name: 'North', departments: [] }];
 
-                for (var nc = 0; nc < deps.length; nc++) {
-                    var dep = deps[nc]
+                for (var nc = 0; nc < xdeps.length; nc++) {
+                    var dep = xdeps[nc]
                     for (var ne=0; ne<empls.length; ne++)
                     {
                         var emp = empls[ne]
