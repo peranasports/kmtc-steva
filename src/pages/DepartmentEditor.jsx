@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { CheckCircleIcon, ChevronRightIcon, EnvelopeIcon } from '@heroicons/react/20/solid'
+import { CheckCircleIcon, ChevronRightIcon, EnvelopeIcon, UserCircleIcon } from '@heroicons/react/20/solid'
 import Spinner from "./../components/Spinner";
 import head from '../assets/avatars/head.png'
 import StaffEvaluationReport
@@ -24,7 +24,7 @@ import {
 
 function DepartmentEditor() {
     const location = useLocation()
-    const department = location.state;
+    const { department, departments } = location.state;
     const [currentEmployee, setCurrentEmployee] = useState(null)
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate()
@@ -104,6 +104,11 @@ function DepartmentEditor() {
         inputFile.current.click();
     }
 
+    const doEmployeeDetails = (emp) =>
+    {
+        navigate('/employeedetails', { state: { employee:emp, departments:departments } })
+    }
+
     const doStaffEval = (emp) =>
     {
         navigate('/staffeval', { state: emp })
@@ -152,6 +157,10 @@ function DepartmentEditor() {
                                                     </p>
                                                     <p className="mt-2 flex items-center text-sm text-gray-500">
                                                         <CheckCircleIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400" aria-hidden="true" onClick={() => doStaffEval(emp)}/>
+                                                        {/* {application.stage} */}
+                                                    </p>
+                                                    <p className="mt-2 flex items-center text-sm text-gray-500">
+                                                        <UserCircleIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-blue-400" aria-hidden="true" onClick={() => doEmployeeDetails(emp)}/>
                                                         {/* {application.stage} */}
                                                     </p>
                                                 </div>

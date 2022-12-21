@@ -9,13 +9,14 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import EvaluationPage from './pages/EvaluationPage'
 import StaffComments from './pages/StaffComments';
-import EmployeePage from './pages/EmployeePage';
+import EmployeesListPage from './pages/EmployeesListPage';
 import GMPage from './pages/GMPage';
 import DepartmentEvaluationReport from './pages/DepartmentEvaluationReport';
 import StaffEvaluationReport from './pages/StaffEvaluationReport';
 import StaffManagement from './pages/StaffManagement';
 import AllEvaluations from './pages/AllEvaluations';
 import DepartmentEditor from './pages/DepartmentEditor';
+import EmployeeDetailsForm from './pages/EmployeeDetailsForm';
 
 // React Toastify
 import { ToastContainer } from "react-toastify";
@@ -36,10 +37,11 @@ function App() {
               <Route path="/departmenteditor" element={<DepartmentEditor />} />
               <Route path="/staffmanagement" element={<StaffManagement />} />
               <Route path="/allevals" element={<AllEvaluations />} />
+              <Route path="/employeedetails" element={<EmployeeDetailsForm />} />
               <Route path="/departmenteval" element={<DepartmentEvaluationReport />} />
               <Route path="/staffeval" element={<StaffEvaluationReport />} />
               <Route path="/employee/:userUid" element={<PrivateRoute />}>
-                <Route path='/employee/:userUid' element={<EmployeePage />} />
+                <Route path='/employee/:userUid' element={<EmployeesListPage />} />
               </Route>
               <Route path="/sign-in" element={<SignIn />} />
               <Route path="/sign-up" element={<SignUp />} />

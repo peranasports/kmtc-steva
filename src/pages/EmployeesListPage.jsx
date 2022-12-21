@@ -16,14 +16,14 @@ import {
     where,
 } from "firebase/firestore";
 
-function EmployeePage() {
+function EmployeesListPage() {
     const navigate = useNavigate()
     const params = useParams();
     // const { loggedIn, currentUser, employee, checkingStatus } = useAuthStatus();
     const [employee, setEmployee] = useState(null)
     const [staff, setStaff] = useState([])
     const [loading, setLoading] = useState(true);
-
+    
     const doEvaluation = (employee, supervisor) => {
         if (employee.uid === undefined) {
             toast.error(employee.name + " has not signed up yet.");
@@ -294,4 +294,4 @@ function EmployeePage() {
     )
 }
 
-export default EmployeePage
+export default EmployeesListPage

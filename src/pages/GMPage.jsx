@@ -260,7 +260,7 @@ function GMPage() {
     }
 
     const doDepartment = (department) => {
-        navigate('/departmenteditor', { state: department })
+        navigate('/departmenteditor', { state: { department: department, departments: departments } })
     }
 
     const doFix = async () =>
