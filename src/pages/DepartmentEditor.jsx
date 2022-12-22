@@ -155,11 +155,11 @@ function DepartmentEditor() {
                                                     <p className="text-sm text-gray-900">
                                                         {emp.position}
                                                     </p>
-                                                    <p className="mt-2 flex items-center text-sm text-gray-500">
+                                                    <p className="cursor-pointer mt-2 flex items-center text-sm text-gray-500">
                                                         <CheckCircleIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400" aria-hidden="true" onClick={() => doStaffEval(emp)}/>
                                                         {/* {application.stage} */}
                                                     </p>
-                                                    <p className="mt-2 flex items-center text-sm text-gray-500">
+                                                    <p className="cursor-pointer mt-2 flex items-center text-sm text-gray-500">
                                                         <UserCircleIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-blue-400" aria-hidden="true" onClick={() => doEmployeeDetails(emp)}/>
                                                         {/* {application.stage} */}
                                                     </p>

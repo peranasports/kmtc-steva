@@ -131,7 +131,7 @@ function EvaluationPage() {
                 var ass = null
                 // no assessment found
                 if (asses.length == 0) {
-                    // are we looking at GM assissing team leader?
+                    // are we looking at GM assessing team leader?
                     if (supervisor.role === 10) {
                         const q2 = query(
                             assessmentRef,

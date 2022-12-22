@@ -331,7 +331,7 @@ function EmployeeDetailsForm() {
                         </div>
                         <div className="sm:col-span-4">
                             <label htmlFor="role" className="block text-sm font-medium text-base-700">
-                                Other departments to evaluate
+                                Departments responsible
                             </label>
                             <div className="mt-1">
                                 <Select

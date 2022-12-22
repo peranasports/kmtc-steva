@@ -87,8 +87,8 @@ function SignIn() {
 
         var employee = await fetchEmployee(userCredential.user)
         console.log(employee.role + " " + employee.name)
-        if (employee.role === 10) {
-          navigate('/gmpage')
+        if (employee.role >= 9) {
+          navigate('/gmpage', { state: employee })
         }
         else {
           navigate(`/employee/${userCredential.user.uid}`)
