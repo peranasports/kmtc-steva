@@ -60,7 +60,8 @@ function SignUp() {
         empl.uid = user.uid
         await setDoc(doc(db, "employees", empls[0].id), empl);
       }
-      } catch (error) {
+      
+    } catch (error) {
         console.log(error)
     }
   }
