@@ -141,10 +141,10 @@ function AllEvaluations() {
                             <th scope="col" className="px-3 py-2 text-left text-sm font-semibold text-gray-900">
                                 Port
                             </th>
-                            <th scope="col" className="px-3 py-2 text-center text-sm font-semibold text-gray-900" onClick={() => doSort(1)}>
+                            <th scope="col" className="cursor-pointer px-3 py-2 text-center text-sm font-semibold text-gray-900" onClick={() => doSort(1)}>
                                 Score
                             </th>
-                            <th scope="col" className="px-3 py-2 text-center text-sm font-semibold text-gray-900" onClick={() => doSort(2)}>
+                            <th scope="col" className="cursor-pointer px-3 py-2 text-center text-sm font-semibold text-gray-900" onClick={() => doSort(2)}>
                                 Percentage
                             </th>
                             <th scope="col" className="px-3 py-2 text-center text-sm font-semibold text-gray-900">
@@ -195,10 +195,10 @@ function AllEvaluations() {
                             <th scope="col" className="px-3 py-2 text-left text-sm font-semibold text-gray-900" onClick={() => doSort(4)}>
                                 Department
                             </th>
-                            <th scope="col" className="px-3 py-2 text-center text-sm font-semibold text-gray-900" onClick={() => doSort(1)}>
+                            <th scope="col" className="cursor-pointer px-3 py-2 text-center text-sm font-semibold text-gray-900" onClick={() => doSort(1)}>
                                 Score
                             </th>
-                            <th scope="col" className="px-3 py-2 text-center text-sm font-semibold text-gray-900" onClick={() => doSort(2)}>
+                            <th scope="col" className="cursor-pointer px-3 py-2 text-center text-sm font-semibold text-gray-900" onClick={() => doSort(2)}>
                                 Percentage
                             </th>
                             <th scope="col" className="px-3 py-2 text-center text-sm font-semibold text-gray-900">

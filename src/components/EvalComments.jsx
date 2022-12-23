@@ -5,6 +5,10 @@ function EvalComments({ staff }) {
     const [singleStaff, setSingleStaff] = useState(false)
 
     useEffect(() => {
+        if (staff.length < 2)
+        {
+            return
+        }
         var uid = null
         var samestaff = true
         for (var ns = 0; ns < staff.length; ns++) {
