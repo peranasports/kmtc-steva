@@ -298,7 +298,12 @@ function GMPage() {
                             <button className="btn btn-sm bg-blue-800 text-white" onClick={() => doForEvaluation()}>FOR EVALUATION</button>
                         </div>
                         :
-                        <div></div>
+                        <div>
+                            <div className="mt-2">
+                                <button className="btn btn-sm bg-blue-800 text-white" onClick={() => doAllEvaluations()}>ALL EVALUATIONS</button>
+                            </div>
+
+                        </div>
                 }
             </div>
 

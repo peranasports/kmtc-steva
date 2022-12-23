@@ -52,7 +52,7 @@ function EvalComments({ staff }) {
                             {staff.map((emp, i) => (
                                 <div className="card w-96 bg-base-100 shadow-xl">
                                     <div className="card-body">
-                                        <h2 className="card-title">BY {emp.supervisor.iccid} - {emp.selfAssessment.totalRating} ({emp.selfAssessment.percentRating}%)</h2>
+                                        <h2 className="card-title text-secondary">BY {emp.supervisor.iccid} - {emp.selfAssessment.totalRating} ({emp.selfAssessment.percentRating}%)</h2>
                                         {parseComments(emp.selfComments)}
                                     </div>
                                 </div>
@@ -72,19 +72,19 @@ function EvalComments({ staff }) {
                                     <div className="card-body">
                                         {
                                             emp.superAssessment === undefined ?
-                                                <h2 className="card-title">{emp.name.toUpperCase()} </h2>
+                                                <h2 className="card-title text-secondary">{emp.name.toUpperCase()} </h2>
                                                 :
                                                 <div>
                                                     {
                                                         commentsType === 0 ?
-                                                            <h2 className="card-title">{emp.name.toUpperCase()} - {emp.superAssessment.totalRating} ({emp.superAssessment.percentRating}%)</h2>
+                                                            <h2 className="card-title text-secondary">{emp.name.toUpperCase()} - {emp.superAssessment.totalRating} ({emp.superAssessment.percentRating}%)</h2>
                                                             :
                                                             <div>
                                                                 {
                                                                     emp.selfAssessment === undefined ?
-                                                                        <h2 className="card-title">{emp.name.toUpperCase()}</h2>
+                                                                        <h2 className="card-title text-secondary">{emp.name.toUpperCase()}</h2>
                                                                         :
-                                                                        <h2 className="card-title">{emp.name.toUpperCase()} - {emp.selfAssessment.totalRating} ({emp.selfAssessment.percentRating}%)</h2>
+                                                                        <h2 className="card-title text-secondary">{emp.name.toUpperCase()} - {emp.selfAssessment.totalRating} ({emp.selfAssessment.percentRating}%)</h2>
                                                                 }
                                                             </div>
                                                     }

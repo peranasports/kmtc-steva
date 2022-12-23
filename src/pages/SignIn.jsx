@@ -91,7 +91,8 @@ function SignIn() {
           navigate('/gmpage', { state: employee })
         }
         else {
-          navigate(`/employee/${userCredential.user.uid}`)
+          navigate('/locked')
+          // navigate(`/employee/${userCredential.user.uid}`)
         }
       }
     } catch (error) {

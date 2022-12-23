@@ -17,6 +17,7 @@ import StaffManagement from './pages/StaffManagement';
 import AllEvaluations from './pages/AllEvaluations';
 import DepartmentEditor from './pages/DepartmentEditor';
 import EmployeeDetailsForm from './pages/EmployeeDetailsForm';
+import Locked from './pages/Locked';
 
 // React Toastify
 import { ToastContainer } from "react-toastify";
@@ -33,6 +34,7 @@ function App() {
           <main className='container mx-auto px-3 pb-12'>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/locked" element={<Locked />} />
               <Route path="/gmpage" element={<GMPage />} />
               <Route path="/departmenteditor" element={<DepartmentEditor />} />
               <Route path="/staffmanagement" element={<StaffManagement />} />

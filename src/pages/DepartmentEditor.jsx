@@ -4,7 +4,7 @@ import { CheckCircleIcon, ChevronRightIcon, EnvelopeIcon, UserCircleIcon } from 
 import Spinner from "./../components/Spinner";
 import head from '../assets/avatars/head.png'
 import StaffEvaluationReport
- from "./StaffEvaluationReport";
+    from "./StaffEvaluationReport";
 // Firebase Authentication
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
@@ -104,14 +104,23 @@ function DepartmentEditor() {
         inputFile.current.click();
     }
 
-    const doEmployeeDetails = (emp) =>
-    {
-        navigate('/employeedetails', { state: { employee:emp, departments:departments } })
+    const doEmployeeDetails = (emp) => {
+        navigate('/employeedetails', { state: { employee: emp, departments: departments } })
     }
 
-    const doStaffEval = (emp) =>
-    {
+    const doStaffEval = (emp) => {
         navigate('/staffeval', { state: emp })
+    }
+
+    const doAddNewStaff = () => {
+        var emp = {
+            department: department.code,
+            depcode: department.id,
+            port: department.port,
+            role: 1,
+            active: true,
+        }
+        doEmployeeDetails(emp)
     }
 
     if (department === undefined) {
@@ -124,6 +133,9 @@ function DepartmentEditor() {
 
     return (
         <>
+            <div className="mt-2">
+                {/* <button className="btn btn-sm bg-blue-800 text-white" onClick={() => doAddNewStaff()}>ADD NEW STAFF</button> */}
+            </div>
             <div>
                 <p className="my-6 text-2xl text-white">{department.name.toUpperCase()}</p>
             </div>
@@ -156,11 +168,11 @@ function DepartmentEditor() {
                                                         {emp.position}
                                                     </p>
                                                     <p className="cursor-pointer mt-2 flex items-center text-sm text-gray-500">
-                                                        <CheckCircleIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400" aria-hidden="true" onClick={() => doStaffEval(emp)}/>
+                                                        <CheckCircleIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400" aria-hidden="true" onClick={() => doStaffEval(emp)} />
                                                         {/* {application.stage} */}
                                                     </p>
                                                     <p className="cursor-pointer mt-2 flex items-center text-sm text-gray-500">
-                                                        <UserCircleIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-blue-400" aria-hidden="true" onClick={() => doEmployeeDetails(emp)}/>
+                                                        <UserCircleIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-blue-400" aria-hidden="true" onClick={() => doEmployeeDetails(emp)} />
                                                         {/* {application.stage} */}
                                                     </p>
                                                 </div>
