@@ -2,12 +2,9 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import head from '../assets/avatars/head.png'
 import { CheckCircleIcon, XCircleIcon, EllipsisHorizontalCircleIcon } from '@heroicons/react/20/solid'
-import GMPage from './GMPage';
-// import { useAuthStatus } from "./../hooks/useAuthStatus";
 import { db } from "../firebase.config";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
-// Firebase Firestore
 import {
     collection,
     getDocs,
@@ -78,12 +75,12 @@ function EmployeesListPage() {
                             const querySnap = await getDocs(q);
                             querySnap.forEach((doc) => {
                                 var e = doc.data()
-                                if (e.iccid != empl.iccid) {
+                                if (e.active && e.iccid != empl.iccid) {
                                     return sts.push(doc.data());
                                 }
                             });
                         }
-                        }
+                    }
 
                     const q2 = query(
                         eRef,

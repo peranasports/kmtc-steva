@@ -1,14 +1,16 @@
 import { useEffect, useState, useRef } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Select from 'react-select'
 import Spinner from '../components/Spinner';
 import { db } from "../firebase.config";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, addDoc, collection } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 function EmployeeDetailsForm() {
+    const navigate = useNavigate()
     const [loading, setLoading] = useState(false);
     const location = useLocation()
-    const { employee, departments } = location.state
+    const { employee, departments, department } = location.state
     const [alldeps, setAlldeps] = useState([])
     const [selecteddeps, setSelecteddeps] = useState([])
     const refActive = useRef(null)
@@ -19,7 +21,7 @@ function EmployeeDetailsForm() {
         active: employee ? employee.active : true,
         assessor: employee ? employee.assessor : '',
         port: employee ? employee.port : '',
-        department: employee ? employee.department : '',
+        depcode: employee ? employee.department : '',
         position: employee ? employee.position : 'Staff',
         role: employee ? employee.role : 1,
         teamsManaged: employee ? employee.teamsManaged : ''
@@ -30,7 +32,7 @@ function EmployeeDetailsForm() {
         emailAddress,
         active,
         port,
-        department,
+        depcode,
         position,
         role,
         assessor,
@@ -110,7 +112,7 @@ function EmployeeDetailsForm() {
         employee.emailAddress = emailAddress
         employee.active = refActive.current.checked
         employee.port = formData.port
-        employee.department = formData.department
+        employee.department = formData.depcode
         employee.position = formData.position
         employee.role = formData.role
         if (formData.assessor !== undefined)
@@ -130,12 +132,23 @@ function EmployeeDetailsForm() {
         }
 
         try {
-            // make sure it's docId and not uid
-            await setDoc(doc(db, "employees", employee.docId), employee);            
+            // if new employee
+            if (employee.docId === undefined)
+            {
+                const docRef = await addDoc(collection(db, "employees"), employee);
+                toast.success("New employee has been created successfully.")            
+            }
+            else
+            {
+                await setDoc(doc(db, "employees", employee.docId), employee);
+                toast.success("Employee information has been saved successfully.")            
+            }
         } catch (error) {
             console.log(error.message)
+            toast.error("Error creating new player");
         }
         setLoading(false);
+        navigate('/departmenteditor', { state: { department: department, departments: departments } })
     }
 
     if (loading) {
@@ -238,15 +251,15 @@ function EmployeeDetailsForm() {
                         </div>
 
                         <div className="sm:col-span-3">
-                            <label htmlFor="department" className="block text-sm font-medium text-base-700">
+                            <label htmlFor="depcode" className="block text-sm font-medium text-base-700">
                                 Department
                             </label>
                             <div className="mt-1">
                                 <select
-                                    id="department"
-                                    name="department"
+                                    id="depcode"
+                                    name="depcode"
                                     autoComplete="department-name"
-                                    value={department}
+                                    value={depcode}
                                     onChange={onMutate}
                                     className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 >

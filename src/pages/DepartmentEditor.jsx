@@ -1,12 +1,9 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CheckCircleIcon, ChevronRightIcon, EnvelopeIcon, UserCircleIcon } from '@heroicons/react/20/solid'
 import Spinner from "./../components/Spinner";
 import head from '../assets/avatars/head.png'
-import StaffEvaluationReport
-    from "./StaffEvaluationReport";
-// Firebase Authentication
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { orderBy } from 'lodash';
 
 // Firebase Database
 import { db } from "../firebase.config";
@@ -27,8 +24,12 @@ function DepartmentEditor() {
     const { department, departments } = location.state;
     const [currentEmployee, setCurrentEmployee] = useState(null)
     const [loading, setLoading] = useState(false);
+    const [showInactiveStaff, setShowInactiveStaff] = useState(false)
     const navigate = useNavigate()
     const inputFile = useRef(null)
+
+    useEffect(() => {
+    },)
 
     const storeImage = async (image) => {
         return new Promise((resolve, reject) => {
@@ -105,7 +106,7 @@ function DepartmentEditor() {
     }
 
     const doEmployeeDetails = (emp) => {
-        navigate('/employeedetails', { state: { employee: emp, departments: departments } })
+        navigate('/employeedetails', { state: { employee: emp, departments: departments, department: department } })
     }
 
     const doStaffEval = (emp) => {
@@ -123,6 +124,17 @@ function DepartmentEditor() {
         doEmployeeDetails(emp)
     }
 
+    const employeesList = () => {
+        if (showInactiveStaff)
+        {
+            return orderBy(department.employees, ['active', 'role'], ['desc', 'desc'])
+        }
+        else
+        {
+            return orderBy(department.employees.filter(obj => obj.active === true), ['role'], ['desc'])
+        }
+    }
+
     if (department === undefined) {
         return <></>
     }
@@ -133,15 +145,21 @@ function DepartmentEditor() {
 
     return (
         <>
-            <div className="mt-2">
-                {/* <button className="btn btn-sm bg-blue-800 text-white" onClick={() => doAddNewStaff()}>ADD NEW STAFF</button> */}
+            <div className="flex justify-between mt-2">
+                <button className="btn btn-sm bg-blue-800 text-white" onClick={() => doAddNewStaff()}>ADD NEW STAFF</button>
+                <div className="form-control">
+                    <label className="cursor-pointer label">
+                        <span className="label-text mr-4">SHOW INACTIVE STAFF</span>
+                        <input type="checkbox" onClick={() => setShowInactiveStaff(!showInactiveStaff)} defaultChecked={showInactiveStaff} className="checkbox checkbox-secondary" />
+                    </label>
+                </div>
             </div>
             <div>
                 <p className="my-6 text-2xl text-white">{department.name.toUpperCase()}</p>
             </div>
             <div className="overflow-hidden bg-white shadow sm:rounded-md">
                 <ul role="list" className="divide-y divide-gray-200">
-                    {department.employees.map((emp) => (
+                    {employeesList().map((emp) => (
                         <li key={emp.emailAddress}>
                             <a href={emp.href} className="block hover:bg-gray-50">
                                 <div className="flex items-center px-4 py-4 sm:px-6">
@@ -157,6 +175,12 @@ function DepartmentEditor() {
                                         <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
                                             <div>
                                                 <p className="truncate text-sm font-medium text-indigo-600">{emp.name}</p>
+                                                {
+                                                    emp.active === false ?
+                                                    <p className="truncate text-sm font-medium text-indigo-600"> (inactive)</p>
+                                                    :
+                                                    <div></div>
+                                                }
                                                 <p className="mt-2 flex items-center text-sm text-gray-500">
                                                     <EnvelopeIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
                                                     <span className="truncate">{emp.emailAddress}</span>

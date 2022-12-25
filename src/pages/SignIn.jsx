@@ -83,16 +83,25 @@ function SignIn() {
       );
 
       if (userCredential.user) {
-
-
         var employee = await fetchEmployee(userCredential.user)
         console.log(employee.role + " " + employee.name)
         if (employee.role >= 9) {
           navigate('/gmpage', { state: employee })
         }
         else {
-          navigate('/locked')
-          // navigate(`/employee/${userCredential.user.uid}`)
+          if (employee.active === false)
+          {
+            toast.error("You are no longer an active employee at KMTC");
+          }
+          else
+          {
+            if (email.includes('kmtc')) {
+              navigate('/locked', { state: employee })
+            }
+            else {
+              navigate(`/employee/${userCredential.user.uid}`)
+            }
+            }
         }
       }
     } catch (error) {

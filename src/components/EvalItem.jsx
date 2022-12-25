@@ -15,7 +15,7 @@ function EvalItem({ evalitem, onRatingChange }) {
                 {
                     evalitem.rating === 0 ?
                         <div>
-                            <input type="radio" name={evalitem.order} className="rating-hidden" defaultChecked='false' />
+                            <input type="radio" name={evalitem.order} className="mask mask-star-2 hidden" defaultChecked='false' />
                             <input type="radio" name={evalitem.order} className="mask mask-star-2 bg-red-500" onClick={() => onRating(1)} />
                             <input type="radio" name={evalitem.order} className="mask mask-star-2 bg-orange-500" onClick={() => onRating(2)} />
                             <input type="radio" name={evalitem.order} className="mask mask-star-2 bg-yellow-500" onClick={() => onRating(3)} />
@@ -24,13 +24,14 @@ function EvalItem({ evalitem, onRatingChange }) {
                         </div>
                         :
 
-                        <div>
-                            <input type="radio" name={evalitem.order} className="rating-hidden" defaultChecked='false' />
+                        <div className="flex">
+                            <input type="radio" name={evalitem.order} className="mask mask-star-2 hidden" defaultChecked='false' />
                             <input type="radio" name={evalitem.order} className="mask mask-star-2 bg-red-500" defaultChecked={evalitem.rating === 1} onClick={() => onRating(1)} />
                             <input type="radio" name={evalitem.order} className="mask mask-star-2 bg-orange-500" defaultChecked={evalitem.rating === 2} onClick={() => onRating(2)} />
                             <input type="radio" name={evalitem.order} className="mask mask-star-2 bg-yellow-500" defaultChecked={evalitem.rating === 3} onClick={() => onRating(3)} />
                             <input type="radio" name={evalitem.order} className="mask mask-star-2 bg-lime-500" defaultChecked={evalitem.rating === 4} onClick={() => onRating(4)} />
                             <input type="radio" name={evalitem.order} className="mask mask-star-2 bg-green-500" defaultChecked={evalitem.rating === 5} onClick={() => onRating(5)} />
+                            <p className="ml-2 text-sm">{evalitem.rating}</p>
                         </div>
                 }
             </div>

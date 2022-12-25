@@ -38,25 +38,7 @@ function DepartmentEvaluationReport() {
     useEffect(() => {
         const fetchStaff = async () => {
             try {
-                // const eRef = collection(db, "employees");
-                // const q = query(
-                //     eRef,
-                //     where("depcode", "==", department.id),
-                //     orderBy("role", "desc")
-                // );
-                // const querySnap = await getDocs(q);
-                // const sts = [];
-                // var teamleader = null
-                // querySnap.forEach((doc) => {
-                //     var emp = doc.data()
-                //     if (emp.role === 4) {
-                //         teamleader = emp
-                //     }
-                //     return sts.push(emp);
-                // });
-                // setStaff(sts)
-
-                var sts = department.employees
+                var sts = department.employees.filter(obj => obj.active)
                 setStaff(sts)
                 
                 var selfs = []
