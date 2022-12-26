@@ -71,12 +71,15 @@ function AllEvaluations() {
                 const aRef = collection(db, "assessments");
                 const q = query(
                     aRef,
-                    where('employeeUid', "!=", 'supervisorUid')
                 );
                 const querySnap = await getDocs(q);
                 const asses = [];
                 querySnap.forEach((doc) => {
-                    return asses.push(doc.data());
+                    var ass = doc.data()
+                    if (ass.employeeUid === ass.supervisorUid)
+                    {
+                        return asses.push(doc.data());
+                    }
                 });
                 if (asses.length !== 0) {
                     setAssessments(asses)
@@ -102,16 +105,16 @@ function AllEvaluations() {
     const getEmployees = () => {
         var asc = isAscending ? 'asc' : 'desc'
         if (sortType === 1) {
-            return orderBy(employees.filter(obj => obj.assessment !== undefined), ['assessment.totalRating'], [asc])
+            return orderBy(employees.filter(obj => obj.role < 8).filter(obj => obj.assessment !== undefined), ['assessment.totalRating'], [asc])
         }
         else if (sortType === 2) {
-            return orderBy(employees.filter(obj => obj.assessment !== undefined), ['assessment.percentRating'], [asc])
+            return orderBy(employees.filter(obj => obj.role < 8).filter(obj => obj.assessment !== undefined), ['assessment.percentRating'], [asc])
         }
         else if (sortType === 3) {
-            return orderBy(employees.filter(obj => obj.assessment !== undefined), ['name'], [asc])
+            return orderBy(employees.filter(obj => obj.role < 8).filter(obj => obj.assessment !== undefined), ['name'], [asc])
         }
         else if (sortType === 4) {
-            return orderBy(employees.filter(obj => obj.assessment !== undefined), ['department'], [asc])
+            return orderBy(employees.filter(obj => obj.role < 8).filter(obj => obj.assessment !== undefined), ['department'], [asc])
         }
     }
 
