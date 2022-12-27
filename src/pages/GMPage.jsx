@@ -63,8 +63,7 @@ function GMPage() {
                 const querySnap = await getDocs(q);
                 querySnap.forEach((doc) => {
                     var setting = doc.data()
-                    if (setting.key === 'evaluationOpen')
-                    {
+                    if (setting.key === 'evaluationOpen') {
                         var sobj = setting
                         sobj.uid = doc.id
                         setEvaluationOpenSetting(sobj)
@@ -264,8 +263,7 @@ function GMPage() {
         return years
     }
 
-    const doToggleEvalStatus = async () =>
-    {
+    const doToggleEvalStatus = async () => {
         var eoSetting = evaluationOpenSetting
         eoSetting.value = eoSetting.value === '0' ? '1' : '0'
         setEvaluationOpenSetting(eoSetting)
@@ -273,7 +271,7 @@ function GMPage() {
         try {
             await setDoc(doc(db, "settings", eoSetting.uid), eoSetting);
         } catch (error) {
-            console.log(error.message)            
+            console.log(error.message)
         }
     }
 
@@ -303,14 +301,14 @@ function GMPage() {
                                     </ul>
                                 </div>
                                 <div className="">
-                                    <button className="btn btn-sm bg-blue-800 text-white" onClick={() => doForEvaluation()}>FOR EVALUATION</button>                                    
+                                    <button className="btn btn-sm bg-blue-800 text-white" onClick={() => doForEvaluation()}>FOR EVALUATION</button>
                                 </div>
                             </div>
                             <div>
                                 {
                                     evaluationOpen === '1' ?
                                         <button className="btn btn-sm ml-10 bg-red-800 text-white" onClick={() => doToggleEvalStatus()}>CLOSE EVALUATION</button>
-                                    :
+                                        :
                                         <button className="btn btn-sm ml-10 bg-green-800 text-white" onClick={() => doToggleEvalStatus()}>OPEN EVALUATION</button>
                                 }
                             </div>
@@ -318,7 +316,14 @@ function GMPage() {
                         :
                         <div>
                             <div className="mt-2">
-                                <button className="btn btn-sm bg-blue-800 text-white" onClick={() => doAllEvaluations()}>FOR EVALUATION</button>
+                                <div className="dropdown dropdown-hover">
+                                    <label tabIndex={0} className="btn btn-sm mx-1 bg-blue-800 text-white">ALL EVALUATIONS</label>
+                                    <ul tabIndex={0} className="dropdown-content menu shadow bg-slate-100 rounded-box w-52">
+                                        {getYears().map((year, i) => (
+                                            <li key={i} onClick={() => doAllEvaluations(year)}><a>{year}</a></li>
+                                        ))}
+                                    </ul>
+                                </div>
                             </div>
 
                         </div>
