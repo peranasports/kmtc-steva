@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import head from '../assets/avatars/head.png'
 import { CheckCircleIcon, XCircleIcon, EllipsisHorizontalCircleIcon } from '@heroicons/react/20/solid'
 import { db } from "../firebase.config";
@@ -14,13 +14,15 @@ import {
 } from "firebase/firestore";
 
 function EmployeesListPage() {
+    const location = useLocation()
+    const { gm } = location.state
     const navigate = useNavigate()
     const params = useParams();
     // const { loggedIn, currentUser, employee, checkingStatus } = useAuthStatus();
     const [employee, setEmployee] = useState(null)
     const [staff, setStaff] = useState([])
     const [loading, setLoading] = useState(true);
-    
+
     const doEvaluation = (employee, supervisor) => {
         if (employee.uid === undefined) {
             toast.error(employee.name + " has not signed up yet.");
@@ -29,6 +31,7 @@ function EmployeesListPage() {
         const st = {
             employee: employee,
             supervisor: supervisor,
+            gm: gm,
         }
         navigate('/evaluation', { state: st })
     }
@@ -64,8 +67,7 @@ function EmployeesListPage() {
                 // }
 
                 if (empl.role >= 4) {
-                    if (empl.teamsManaged !== undefined)
-                    {
+                    if (empl.teamsManaged !== undefined) {
                         var teams = empl.teamsManaged.split('-')
                         for (var nt = 0; nt < teams.length; nt++) {
                             const q = query(
@@ -143,6 +145,16 @@ function EmployeesListPage() {
 
     return (
         <>
+            {
+                gm ?
+                    <div className="my-2">
+                        <button className="btn btn-sm bg-blue-800 text-white" onClick={() => { navigate('/gmpage') }}>BACK</button>
+                </div>
+                    :
+                    <div>
+                    </div>
+            }
+
             <ul role="list" className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {staff.map((person) => (
                     <li key={person.iccid} className="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow">

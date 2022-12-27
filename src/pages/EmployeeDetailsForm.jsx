@@ -114,7 +114,7 @@ function EmployeeDetailsForm() {
         employee.port = formData.port
         employee.department = formData.depcode
         employee.position = formData.position
-        employee.role = formData.role
+        employee.role = Number.parseInt(formData.role)
         if (formData.assessor !== undefined)
         {
             employee.assessor = formData.assessor
@@ -148,6 +148,11 @@ function EmployeeDetailsForm() {
             toast.error("Error creating new player");
         }
         setLoading(false);
+        navigate('/departmenteditor', { state: { department: department, departments: departments } })
+    }
+
+    const onCancel = () =>
+    {
         navigate('/departmenteditor', { state: { department: department, departments: departments } })
     }
 
@@ -367,6 +372,7 @@ function EmployeeDetailsForm() {
                 <div className="flex justify-end">
                     <button
                         type="button"
+                        onClick={onCancel}
                         className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-base-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
                         Cancel

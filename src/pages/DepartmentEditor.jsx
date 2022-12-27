@@ -146,7 +146,10 @@ function DepartmentEditor() {
     return (
         <>
             <div className="flex justify-between mt-2">
-                <button className="btn btn-sm bg-blue-800 text-white" onClick={() => doAddNewStaff()}>ADD NEW STAFF</button>
+                <div className="">
+                    <button className="btn btn-sm bg-blue-800 text-white" onClick={() => {navigate('/gmpage')}}>BACK</button>
+                    <button className="btn btn-sm mx-2 bg-blue-800 text-white" onClick={() => doAddNewStaff()}>ADD NEW STAFF</button>
+                </div>
                 <div className="form-control">
                     <label className="cursor-pointer label">
                         <span className="label-text mr-4">SHOW INACTIVE STAFF</span>

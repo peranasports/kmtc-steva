@@ -95,13 +95,15 @@ function SignIn() {
           }
           else
           {
-            if (email.includes('kmtc')) {
-              navigate('/locked', { state: employee })
-            }
-            else {
-              navigate(`/employee/${userCredential.user.uid}`)
-            }
-            }
+            navigate(`/employee/${userCredential.user.uid}`, { state: { gm: false } })
+
+            // if (email.includes('kmtc')) {
+            //   navigate('/locked', { state: employee })
+            // }
+            // else {
+            //   navigate(`/employee/${userCredential.user.uid}`, { state: { gm: false } })
+            // }
+          }
         }
       }
     } catch (error) {

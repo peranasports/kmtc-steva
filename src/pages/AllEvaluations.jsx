@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Spinner from "./../components/Spinner";
-import EmployeeEditor from "../components/EmployeeEditor";
+import head from '../assets/avatars/head.png'
 import { ChatBubbleLeftRightIcon } from '@heroicons/react/20/solid'
 import EmployeeEvalComments from "../components/EmployeeEvalComments";
 
@@ -23,6 +24,9 @@ import { toast } from "react-toastify";
 import { sortBy, orderBy } from 'lodash';
 
 function AllEvaluations() {
+    const navigate = useNavigate()
+    const location = useLocation()
+    const { year } = location.state;
     const [sortType, setSortType] = useState(1)
     const [isAscending, setIsAscending] = useState(false)
     const [employees, setEmployees] = useState(null)
@@ -38,7 +42,7 @@ function AllEvaluations() {
                 const eRef = collection(db, "employees");
                 const q = query(
                     eRef,
-                    where("active", "==", true),
+                    // where("active", "==", true),
                 );
                 const querySnap = await getDocs(q);
                 const empls = [];
@@ -76,9 +80,13 @@ function AllEvaluations() {
                 const asses = [];
                 querySnap.forEach((doc) => {
                     var ass = doc.data()
-                    if (ass.employeeUid === ass.supervisorUid)
-                    {
-                        return asses.push(doc.data());
+                    if (ass.employeeUid === ass.supervisorUid) {
+                        var ass = doc.data()
+                        var ts = new Date(ass.timestamp.seconds * 1000); // Epoch
+                        // ts.setSeconds(ass.timestamp)
+                        if (ts.getFullYear().toString() === year) {
+                            return asses.push(ass);
+                        }
                     }
                 });
                 if (asses.length !== 0) {
@@ -140,10 +148,15 @@ function AllEvaluations() {
             <div className="drawer drawer-end">
                 <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
                 <div className="drawer-content">
-
                     <div>
+                        <div className="flex mt-2">
+                            <button className="btn btn-sm bg-blue-800 text-white" onClick={() => { navigate('/gmpage') }}>BACK</button>
+                            <div className="mt-1 ml-10 text-secondary font-bold">
+                                ALL EVALUATIONS - {year}
+                            </div>
+                        </div>
                         <div className="overflow-hidden w-90 shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                            <p>SOUTH</p>
+                            <p className="my-2 font-medium">SOUTH</p>
                             <table className="min-w-full divide-y divide-gray-300">
                                 <thead className="bg-gray-50">
                                     <tr>
@@ -172,8 +185,15 @@ function AllEvaluations() {
                                 <tbody className="bg-white">
                                     {getEmployees().filter(obj => obj.port === 'SGN').map((emp, i) => (
                                         <tr key={emp.uid} className={i % 2 === 0 ? undefined : 'bg-gray-100'}>
-                                            <td className="py-2.5 pl-4 pr-3 text-sm font-medium text-gray-900">
-                                                {emp.name.toUpperCase()}
+                                            <td className="flex py-2.5 pl-4 pr-3 text-sm font-medium text-gray-900">
+                                                <div className="avatar">
+                                                    <div className="w-8 rounded-xl">
+                                                        <img className="cursor-pointer" src={emp.photoUrl ? emp.photoUrl : head} alt="" />
+                                                    </div>
+                                                </div>
+                                                <div className="ml-2 mt-2">
+                                                    {emp.name.toUpperCase()}
+                                                </div>
                                             </td>
                                             <td className="py-2.5 pl-4 pr-3 text-sm font-medium text-gray-900">
                                                 {emp.department.toUpperCase()}
@@ -206,7 +226,7 @@ function AllEvaluations() {
                                 </tbody>
                             </table>
                         </div>
-                        <p>NORTH</p>
+                        <p className="my-2 font-medium">NORTH</p>
                         <div className="overflow-hidden w-90 shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
                             <table className="min-w-full divide-y divide-gray-300">
                                 <thead className="bg-gray-50">
@@ -233,8 +253,15 @@ function AllEvaluations() {
                                 <tbody className="bg-white">
                                     {getEmployees().filter(obj => obj.port !== 'SGN').map((emp, i) => (
                                         <tr key={emp.uid} className={i % 2 === 0 ? undefined : 'bg-gray-100'}>
-                                            <td className="py-2.5 pl-4 pr-3 text-sm font-medium text-gray-900">
-                                                {emp.name.toUpperCase()}
+                                            <td className="flex py-2.5 pl-4 pr-3 text-sm font-medium text-gray-900">
+                                                <div className="avatar">
+                                                    <div className="w-8 rounded-xl">
+                                                        <img className="cursor-pointer" src={emp.photoUrl ? emp.photoUrl : head} alt="" />
+                                                    </div>
+                                                </div>
+                                                <div className="ml-2 mt-2">
+                                                    {emp.name.toUpperCase()}
+                                                </div>
                                             </td>
                                             <td className="py-2.5 pl-4 pr-3 text-sm font-medium text-gray-900">
                                                 {emp.port.toUpperCase()}-{emp.department.toUpperCase()}
@@ -274,7 +301,7 @@ function AllEvaluations() {
                     <div className="w-90 bg-base-100">
                         {
                             selectedEmp !== null ?
-                                <EmployeeEvalComments employee={selectedEmp} allStaff={employees} closeComments={()=>doCloseComments()} />
+                                <EmployeeEvalComments employee={selectedEmp} allStaff={employees} closeComments={() => doCloseComments()} />
                                 :
                                 <div></div>
                         }

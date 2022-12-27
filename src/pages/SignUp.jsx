@@ -60,7 +60,7 @@ function SignUp() {
         empl.uid = user.uid
         await setDoc(doc(db, "employees", empls[0].id), empl);
       }
-      
+
     } catch (error) {
         console.log(error)
     }
@@ -97,7 +97,7 @@ function SignUp() {
       // second parameter is the object to be saved
       await setDoc(doc(db, "users", user.uid), formDataCopy);
 
-      navigate(`/employee/${user.uid}`);
+      navigate(`/employee/${user.uid}`, { state: { gm: false } });
     } catch (error) {
       toast.error("Error signing up\n" + error.message);
     }

@@ -236,12 +236,12 @@ function GMPage() {
         navigate('/staffmanagement')
     }
 
-    const doAllEvaluations = () => {
-        navigate('/allevals')
+    const doAllEvaluations = (year) => {
+        navigate('/allevals', { state: { year: year } })
     }
 
     const doForEvaluation = () => {
-        navigate(`/employee/${employee.uid}`)
+        navigate(`/employee/${employee.uid}`, { state: { gm: true } })
     }
 
     const doDepartment = (department) => {
@@ -278,6 +278,18 @@ function GMPage() {
         }
     }
 
+    const getYears = () =>
+    {
+        var currentYear = new Date().getFullYear() 
+        var baseYear = 2020
+        var years = []
+        for (var n=currentYear; n>=baseYear; n--)
+        {
+            years.push(n.toString())
+        }
+        return years
+    }
+
     if (loading) {
         return <Spinner />;
     }
@@ -294,7 +306,14 @@ function GMPage() {
                     employee.role === 10 ?
                         <div className="mt-2">
                             <button className="btn btn-sm bg-blue-800 text-white hidden" onClick={() => doFix()}>FIX</button>
-                            <button className="btn btn-sm bg-blue-800 text-white" onClick={() => doAllEvaluations()}>ALL EVALUATIONS</button>
+                            <div className="dropdown dropdown-hover">
+                                <label tabIndex={0} className="btn btn-sm m-1 bg-blue-800 text-white">ALL EVALUATIONS</label>
+                                <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                                    {getYears().map((year, i) => (
+                                        <li key={i} onClick={() => doAllEvaluations(year)}><a>{year}</a></li>
+                                    ))}
+                                </ul>
+                            </div>
                             <button className="btn btn-sm bg-blue-800 text-white" onClick={() => doForEvaluation()}>FOR EVALUATION</button>
                         </div>
                         :
@@ -336,7 +355,7 @@ function GMPage() {
                                                             {department.name}
                                                         </a>
                                                         <p className="text-gray-500 font-bold">{department.teamleader ? department.teamleader.name : ''}</p>
-                                                        <p className="text-gray-500">{department.employees.length.toString()} Members</p>
+                                                        <p className="text-gray-500">{department.employees.filter(obj => obj.active).length.toString()} Members</p>
                                                     </div>
                                                     <div className="flex ml-3 mb-2">
                                                         <div className="flex" onClick={() => doDepartment(department)}>

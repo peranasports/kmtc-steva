@@ -24,6 +24,7 @@ function StaffComments() {
         const st = {
             employee: employee,
             supervisor: supervisor,
+            gm: false
         }
         navigate('/evaluation', { state: st })
     }

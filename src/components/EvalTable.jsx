@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 function EvalTable({ category, staff, showSelf }) {
+
     return (
         <div>
             <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">

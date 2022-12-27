@@ -23,7 +23,7 @@ import { toast } from "react-toastify";
 function EvaluationPage() {
     const navigate = useNavigate()
     const location = useLocation();
-    const { employee, supervisor } = location.state;
+    const { employee, supervisor, gm } = location.state;
     const [, forceUpdate] = useState(0);
     const [categories, setCategories] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -335,12 +335,12 @@ function EvaluationPage() {
     const doSubmit = async () => {
         assessment.submitted = true
         var ass = await saveAssessment()
-        navigate(`/employee/${supervisor.uid}`)
+        navigate(`/employee/${supervisor.uid}`, { state: { gm: false } })
     }
 
     const doBack = async () => {
         var ass = await saveAssessment()
-        navigate(`/employee/${supervisor.uid}`)
+        navigate(`/employee/${supervisor.uid}`, { state: { gm: gm } })
     }
 
     const doComments = async () => {
