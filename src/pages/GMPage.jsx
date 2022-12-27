@@ -29,6 +29,8 @@ function GMPage() {
     const [employees, setEmployees] = useState(null)
     const [departments, setDepartments] = useState(null)
     const [loading, setLoading] = useState(true);
+    const [evaluationOpenSetting, setEvaluationOpenSetting] = useState(null)
+    const [evaluationOpen, setEvaluationOpen] = useState('0')
     const { loggedIn, currentUser, employee, checkingStatus } = useAuthStatus();
 
     const depcolors = [
@@ -51,6 +53,29 @@ function GMPage() {
     }
 
     useEffect(() => {
+        const fetchEvaluationStatus = async () => {
+            try {
+                // Get reference
+                const eRef = collection(db, "settings");
+                const q = query(
+                    eRef,
+                );
+                const querySnap = await getDocs(q);
+                querySnap.forEach((doc) => {
+                    var setting = doc.data()
+                    if (setting.key === 'evaluationOpen')
+                    {
+                        var sobj = setting
+                        sobj.uid = doc.id
+                        setEvaluationOpenSetting(sobj)
+                        setEvaluationOpen(setting.value)
+                    }
+                });
+            } catch (error) {
+                toast.error("Could not fetch settings\n" + error.message);
+            }
+        }
+
         const fetchEmployees = async () => {
             try {
                 // Get reference
@@ -175,58 +200,9 @@ function GMPage() {
                 toast.error("Could not fetch departments\n" + error.message);
             }
         };
+        fetchEvaluationStatus()
         fetchEmployees()
-        // fetchDepartments()
     }, []);
-
-    // useEffect(() => {
-    //     const fetchDepartments = async () => {
-    //         try {
-    //             // Get reference
-    //             const dRef = collection(db, "departments");
-
-    //             // Create a query
-    //             const q = query(
-    //                 dRef,
-    //                 where("id", ">", 10),
-    //                 orderBy("id")
-    //             );
-
-    //             // Execute query
-    //             const querySnap = await getDocs(q);
-
-    //             const deps = [];
-
-    //             querySnap.forEach((doc) => {
-    //                 var dep = doc.data()
-    //                 dep.uid = doc.id
-    //                 return deps.push(dep);
-    //             });
-
-    //             const regs = [{ name: 'South', departments: [] }, { name: 'North', departments: [] }];
-
-    //             for (var nc = 0; nc < deps.length; nc++) {
-    //                 var dep = deps[nc]
-    //                 if (dep.port === 'SGN') {
-    //                     dep.region = 0
-    //                     regs[0].departments.push(dep)
-    //                 }
-    //                 else {
-    //                     dep.region = 1
-    //                     regs[1].departments.push(dep)
-    //                 }
-    //             }
-    //             setRegions(regs)
-    //             setDepartments(deps)
-
-    //             setLoading(false);
-    //         } catch (error) {
-    //             toast.error("Could not fetch departments");
-    //         }
-    //     };
-
-    //     fetchDepartments()
-    // }, []);
 
     const doEvaluation = (dep) => {
         navigate('/departmenteval', { state: { department: dep } })
@@ -278,16 +254,27 @@ function GMPage() {
         }
     }
 
-    const getYears = () =>
-    {
-        var currentYear = new Date().getFullYear() 
-        var baseYear = 2020
+    const getYears = () => {
+        var currentYear = new Date().getFullYear()
+        var baseYear = 2022
         var years = []
-        for (var n=currentYear; n>=baseYear; n--)
-        {
+        for (var n = currentYear; n >= baseYear; n--) {
             years.push(n.toString())
         }
         return years
+    }
+
+    const doToggleEvalStatus = async () =>
+    {
+        var eoSetting = evaluationOpenSetting
+        eoSetting.value = eoSetting.value === '0' ? '1' : '0'
+        setEvaluationOpenSetting(eoSetting)
+        setEvaluationOpen(eoSetting.value)
+        try {
+            await setDoc(doc(db, "settings", eoSetting.uid), eoSetting);
+        } catch (error) {
+            console.log(error.message)            
+        }
     }
 
     if (loading) {
@@ -301,25 +288,37 @@ function GMPage() {
 
     return (
         <>
-            <div className="flex justify-between">
+            <div className="">
                 {
                     employee.role === 10 ?
-                        <div className="mt-2">
-                            <button className="btn btn-sm bg-blue-800 text-white hidden" onClick={() => doFix()}>FIX</button>
-                            <div className="dropdown dropdown-hover">
-                                <label tabIndex={0} className="btn btn-sm m-1 bg-blue-800 text-white">ALL EVALUATIONS</label>
-                                <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
-                                    {getYears().map((year, i) => (
-                                        <li key={i} onClick={() => doAllEvaluations(year)}><a>{year}</a></li>
-                                    ))}
-                                </ul>
+                        <div className="flex justify-between mt-2">
+                            <div className="flex">
+                                {/* <button className="btn btn-sm bg-blue-800 text-white hidden" onClick={() => doFix()}>FIX</button> */}
+                                <div className="dropdown dropdown-hover">
+                                    <label tabIndex={0} className="btn btn-sm mx-1 bg-blue-800 text-white">ALL EVALUATIONS</label>
+                                    <ul tabIndex={0} className="dropdown-content menu shadow bg-slate-100 rounded-box w-52">
+                                        {getYears().map((year, i) => (
+                                            <li key={i} onClick={() => doAllEvaluations(year)}><a>{year}</a></li>
+                                        ))}
+                                    </ul>
+                                </div>
+                                <div className="">
+                                    <button className="btn btn-sm bg-blue-800 text-white" onClick={() => doForEvaluation()}>FOR EVALUATION</button>                                    
+                                </div>
                             </div>
-                            <button className="btn btn-sm bg-blue-800 text-white" onClick={() => doForEvaluation()}>FOR EVALUATION</button>
+                            <div>
+                                {
+                                    evaluationOpen === '1' ?
+                                        <button className="btn btn-sm ml-10 bg-red-800 text-white" onClick={() => doToggleEvalStatus()}>CLOSE EVALUATION</button>
+                                    :
+                                        <button className="btn btn-sm ml-10 bg-green-800 text-white" onClick={() => doToggleEvalStatus()}>OPEN EVALUATION</button>
+                                }
+                            </div>
                         </div>
                         :
                         <div>
                             <div className="mt-2">
-                                <button className="btn btn-sm bg-blue-800 text-white" onClick={() => doAllEvaluations()}>ALL EVALUATIONS</button>
+                                <button className="btn btn-sm bg-blue-800 text-white" onClick={() => doAllEvaluations()}>FOR EVALUATION</button>
                             </div>
 
                         </div>

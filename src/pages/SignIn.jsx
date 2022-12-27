@@ -96,13 +96,6 @@ function SignIn() {
           else
           {
             navigate(`/employee/${userCredential.user.uid}`, { state: { gm: false } })
-
-            // if (email.includes('kmtc')) {
-            //   navigate('/locked', { state: employee })
-            // }
-            // else {
-            //   navigate(`/employee/${userCredential.user.uid}`, { state: { gm: false } })
-            // }
           }
         }
       }

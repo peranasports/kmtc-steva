@@ -35,8 +35,28 @@ function EvaluationPage() {
     const [ppr, setPpr] = useState('')
     const [feedback, setFeedback] = useState('')
     const [suggestion, setSuggestion] = useState('')
+    const [evaluationOpen, setEvaluationOpen] = useState('0')
 
     useEffect(() => {
+        const fetchEvaluationStatus = async () => {
+            try {
+                // Get reference
+                const eRef = collection(db, "settings");
+                const q = query(
+                    eRef,
+                );
+                const querySnap = await getDocs(q);
+                querySnap.forEach((doc) => {
+                    var setting = doc.data()
+                    if (setting.key === 'evaluationOpen') {
+                        setEvaluationOpen(setting.value)
+                    }
+                });
+            } catch (error) {
+                toast.error("Could not fetch settings\n" + error.message);
+            }
+        }
+
         const fetchCategories = async () => {
             try {
                 // Get reference
@@ -147,7 +167,7 @@ function EvaluationPage() {
                         });
                         if (asses.length == 0) {
                             fetchCategories();
-                            return        
+                            return
                         }
                         var newass = JSON.stringify(asses[0].data)
                         ass = JSON.parse(newass)
@@ -155,14 +175,12 @@ function EvaluationPage() {
                         ass.comments = '|~||~|'
                         ass.supervisorUid = employee.uid
                     }
-                    else
-                    {
+                    else {
                         fetchCategories();
                         return
                     }
                 }
-                else
-                {
+                else {
                     ass = asses[0].data
                     ass.uid = asses[0].id
                 }
@@ -202,6 +220,7 @@ function EvaluationPage() {
             }
         }
 
+        fetchEvaluationStatus()
         fetchAssessment()
         // calculateRatings(ratings)
     }, [location]);
@@ -377,63 +396,70 @@ function EvaluationPage() {
 
     return (
         <>
-            <div className='rounded-sm shadow-lg bg-base-100'>
-                <div className="flex justify-between">
-                    <div className="mt-2 justify-start">
-                        <button className="w-28 btn btn-sm bg-blue-800 text-white" onClick={() => doBack()}>BACK</button>
-                        <button className="w-28 btn btn-sm bg-blue-800 text-white" onClick={() => doSubmit()}>SUBMIT</button>
-                        <button className='w-28 btn btn-sm bg-blue-800 text-white' onClick={doComments}>COMMENTS</button>
-                        <button className="ml-4 btn btn-sm bg-slate-800 text-slate-400 hidden" onClick={() => doRandom()}>RANDOM FILL</button>
-                    </div>
-                    <div className="flex justify-end">
-                        <p className='mt-2 text-lg'>
-                            {employee.name.toUpperCase()}
-                        </p>
-                    </div>
-                </div>
-                <div className=''>
-                    {categories.map((category) => (
-                        <div className="text-xl"
-                            key={category.catId}>
-                            <div className="collapse collapse-arrow my-4 border border-base-300 bg-base-100 rounded-box">
-                                <input type="checkbox" defaultChecked='true' />
-                                <div className="collapse-title text-md font-medium">
-                                    {category.name}
+            {
+                evaluationOpen === '1' ?
+                    <div>
+                        <div className='rounded-sm shadow-lg bg-base-100'>
+                            <div className="flex justify-between">
+                                <div className="mt-2 justify-start">
+                                    <button className="w-28 btn btn-sm bg-blue-800 text-white" onClick={() => doBack()}>BACK</button>
+                                    <button className="w-28 btn btn-sm bg-blue-800 text-white" onClick={() => doSubmit()}>SUBMIT</button>
+                                    <button className='w-28 btn btn-sm bg-blue-800 text-white' onClick={doComments}>COMMENTS</button>
+                                    <button className="ml-4 btn btn-sm bg-slate-800 text-slate-400 hidden" onClick={() => doRandom()}>RANDOM FILL</button>
                                 </div>
-                                <div className="collapse-content">
-                                    {getItems(category).map((evalitem) => (
-                                        <div className="flex justify-end"
-                                            key={evalitem.order}>
-                                            <EvalItem evalitem={evalitem} onRatingChange={(r, evaltime) => onRatingChange(r, evaltime)} />
-                                        </div>
-                                    ))}
+                                <div className="flex justify-end">
+                                    <p className='mt-2 text-lg'>
+                                        {employee.name.toUpperCase()}
+                                    </p>
                                 </div>
                             </div>
+                            <div className=''>
+                                {categories.map((category) => (
+                                    <div className="text-xl"
+                                        key={category.catId}>
+                                        <div className="collapse collapse-arrow my-4 border border-base-300 bg-base-100 rounded-box">
+                                            <input type="checkbox" defaultChecked='true' />
+                                            <div className="collapse-title text-md font-medium">
+                                                {category.name}
+                                            </div>
+                                            <div className="collapse-content">
+                                                {getItems(category).map((evalitem) => (
+                                                    <div className="flex justify-end"
+                                                        key={evalitem.order}>
+                                                        <EvalItem evalitem={evalitem} onRatingChange={(r, evaltime) => onRatingChange(r, evaltime)} />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    ))}
-                </div>
-            </div>
-            <div className="flex justify-between">
-                <div className="justify-start">
-                </div>
-                <div className="flex justify-end">
-                    <p className="text-md">
-                        Total:
-                    </p>
-                    <p className="mx-6 text-md">
-                        {totalRating} ( {percentRating}%)
-                    </p>
-                </div>
-            </div>
-            <div className="flex justify-between">
-                <div className="mt-2 justify-start">
-                </div>
-                <div className="flex justify-end">
-                    <p className={gradeTextClass()}>
-                        {grade}
-                    </p>
-                </div>
-            </div>
+                        <div className="flex justify-between">
+                            <div className="justify-start">
+                            </div>
+                            <div className="flex justify-end">
+                                <p className="text-md">
+                                    Total:
+                                </p>
+                                <p className="mx-6 text-md">
+                                    {totalRating} ( {percentRating}%)
+                                </p>
+                            </div>
+                        </div>
+                        <div className="flex justify-between">
+                            <div className="mt-2 justify-start">
+                            </div>
+                            <div className="flex justify-end">
+                                <p className={gradeTextClass()}>
+                                    {grade}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    :
+                    <div className="text-2xl font-bold mt-10 text-center">Evaluation is currently closed.</div>
+            }
         </>
     )
 }
