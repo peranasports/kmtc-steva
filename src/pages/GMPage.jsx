@@ -307,9 +307,19 @@ function GMPage() {
                             <div>
                                 {
                                     evaluationOpen === '1' ?
-                                        <button className="btn btn-sm ml-10 bg-red-800 text-white" onClick={() => doToggleEvalStatus()}>CLOSE EVALUATION</button>
+                                        <div className="flex">
+                                            <div className="btn btn-sm bg-green-800 btn-disabled text-white">
+                                                EVALUATION IS OPEN
+                                            </div>
+                                            <button className="btn btn-sm ml-2 bg-blue-800 text-white" onClick={() => doToggleEvalStatus()}>CLOSE</button>
+                                        </div>
                                         :
-                                        <button className="btn btn-sm ml-10 bg-green-800 text-white" onClick={() => doToggleEvalStatus()}>OPEN EVALUATION</button>
+                                        <div className="flex">
+                                            <div className="btn btn-sm bg-red-800 btn-disabled text-white">
+                                                EVALUATION IS CLOSE
+                                            </div>
+                                            <button className="btn btn-sm ml-2 bg-blue-800 text-white" onClick={() => doToggleEvalStatus()}>OPEN</button>
+                                        </div>
                                 }
                             </div>
                         </div>
